@@ -15,7 +15,7 @@ export default function AdminMentorsPage() {
 
   const fetchMentors = async () => {
     setLoading(true);
-    const params = new URLSearchParams({ limit: '200' });
+    const params = new URLSearchParams({ limit: '200', includePending: 'true' });
     if (search) params.set('search', search);
     const res = await fetch(`/api/mentors?${params.toString()}`);
     const data = await res.json();
@@ -103,7 +103,7 @@ export default function AdminMentorsPage() {
                       </div>
                     </td>
                     <td className="px-4 py-3 hidden lg:table-cell">
-                      <Badge variant={mentor.status === 'Available' ? 'green' : 'gray'}>
+                      <Badge variant={mentor.status === 'Available' ? 'green' : mentor.status === 'Pending Approval' ? 'gold' : 'gray'}>
                         {mentor.status}
                       </Badge>
                     </td>

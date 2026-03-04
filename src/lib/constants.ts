@@ -46,7 +46,7 @@ export const SECTOR_OPTIONS = [
   'Wholesale Distribution',
 ] as const;
 
-export const STATUS_OPTIONS = ['Available', 'Unavailable', 'On Hold'] as const;
+export const STATUS_OPTIONS = ['Available', 'Unavailable', 'On Hold', 'Pending Approval'] as const;
 
 export const WORK_STATUS_OPTIONS = ['Working', 'Retired', 'Part Time'] as const;
 

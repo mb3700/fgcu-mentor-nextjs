@@ -4,23 +4,27 @@ import type { StatsData } from '@/types';
 
 export async function GET() {
   try {
-    // Basic counts
-    const [total, available, speakers, judges, alumni, veterans] =
+    const activeFilter = { status: { not: 'Pending Approval' } };
+
+    // Basic counts (exclude pending)
+    const [total, available, pending, speakers, judges, alumni, veterans] =
       await Promise.all([
-        prisma.mentor.count(),
+        prisma.mentor.count({ where: activeFilter }),
         prisma.mentor.count({ where: { status: 'Available' } }),
-        prisma.mentor.count({ where: { potentialSpeaker: true } }),
-        prisma.mentor.count({ where: { potentialJudge: true } }),
-        prisma.mentor.count({ where: { fgcuAlumni: true } }),
-        prisma.mentor.count({ where: { veteranStatus: true } }),
+        prisma.mentor.count({ where: { status: 'Pending Approval' } }),
+        prisma.mentor.count({ where: { ...activeFilter, potentialSpeaker: true } }),
+        prisma.mentor.count({ where: { ...activeFilter, potentialJudge: true } }),
+        prisma.mentor.count({ where: { ...activeFilter, fgcuAlumni: true } }),
+        prisma.mentor.count({ where: { ...activeFilter, veteranStatus: true } }),
       ]);
 
-    // Array field breakdowns using raw SQL with unnest for PostgreSQL
+    // Array field breakdowns using raw SQL with unnest for PostgreSQL (exclude pending)
     const programRows = await prisma.$queryRaw<
       { value: string; count: bigint }[]
     >`
       SELECT unnest(programs) as value, COUNT(*) as count
       FROM mentors
+      WHERE status != 'Pending Approval'
       GROUP BY value
       ORDER BY count DESC
     `;
@@ -30,6 +34,7 @@ export async function GET() {
     >`
       SELECT unnest(domain_expertise) as value, COUNT(*) as count
       FROM mentors
+      WHERE status != 'Pending Approval'
       GROUP BY value
       ORDER BY count DESC
     `;
@@ -39,13 +44,15 @@ export async function GET() {
     >`
       SELECT unnest(sector_expertise) as value, COUNT(*) as count
       FROM mentors
+      WHERE status != 'Pending Approval'
       GROUP BY value
       ORDER BY count DESC
     `;
 
-    // Work status breakdown using standard Prisma groupBy
+    // Work status breakdown (exclude pending)
     const workStatusRows = await prisma.mentor.groupBy({
       by: ['workStatus'],
+      where: activeFilter,
       _count: { _all: true },
       orderBy: { _count: { workStatus: 'desc' } },
     });
@@ -75,6 +82,7 @@ export async function GET() {
     const stats: StatsData = {
       total,
       available,
+      pending,
       speakers,
       judges,
       alumni,

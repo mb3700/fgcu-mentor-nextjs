@@ -28,6 +28,7 @@ export default async function MentorProfilePage({ params }: Props) {
   });
 
   if (!mentor) notFound();
+  if (mentor.status === 'Pending Approval') notFound();
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

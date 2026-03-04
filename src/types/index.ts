@@ -37,6 +37,7 @@ export interface Interaction {
 export interface StatsData {
   total: number;
   available: number;
+  pending: number;
   speakers: number;
   judges: number;
   alumni: number;

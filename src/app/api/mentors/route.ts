@@ -45,8 +45,11 @@ export async function GET(request: NextRequest) {
     }
 
     // Scalar filters
+    const includePending = searchParams.get('includePending') === 'true';
     if (status) {
       where.status = status;
+    } else if (!includePending) {
+      where.status = { not: 'Pending Approval' };
     }
     if (workStatus) {
       where.workStatus = workStatus;
