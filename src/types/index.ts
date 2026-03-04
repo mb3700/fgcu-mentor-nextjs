@@ -68,7 +68,6 @@ export interface MatchRequest {
   domainExpertise: string[];
   sectorExpertise: string[];
   programs?: string[];
-  limit?: number;
 }
 
 export interface MatchResult {

@@ -48,6 +48,5 @@ export function matchMentors(mentors: Mentor[], request: MatchRequest): MatchRes
 
   results.sort((a, b) => b.score - a.score);
 
-  const limit = request.limit || 20;
-  return results.slice(0, limit);
+  return results;
 }
