@@ -34,7 +34,7 @@ export default function MatchPage() {
       }),
     });
     const data = await res.json();
-    setResults(data.results || []);
+    setResults(Array.isArray(data) ? data : []);
     setLoading(false);
   };
 
