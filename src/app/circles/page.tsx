@@ -4,6 +4,8 @@ import { Avatar } from '@/components/ui/Avatar';
 import { Badge } from '@/components/ui/Badge';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Mentor Circles | FGCU Mentor Directory',
   description: 'View the Mentor Circle schedule for the Daveler & Kauanui School of Entrepreneurship',

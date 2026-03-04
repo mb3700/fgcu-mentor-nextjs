@@ -6,6 +6,8 @@ import { Badge } from '@/components/ui/Badge';
 import { AttendanceBadge } from '@/components/circles/AttendanceBadge';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 interface Props {
   params: Promise<{ id: string }>;
 }
