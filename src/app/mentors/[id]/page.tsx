@@ -46,7 +46,7 @@ export default async function MentorProfilePage({ params }: Props) {
       {/* Profile Card */}
       <div className="glass-card rounded-2xl shadow-lg overflow-hidden fade-in">
         {/* Hero Header */}
-        <div className="hero-gradient px-8 py-10">
+        <div className="hero-gradient px-4 sm:px-8 py-8 sm:py-10">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
             <Avatar name={mentor.name} size="lg" photoUrl={mentor.photoUrl} />
             <div className="flex-1">
@@ -106,8 +106,8 @@ export default async function MentorProfilePage({ params }: Props) {
         </div>
 
         {/* Content */}
-        <div className="p-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="p-4 sm:p-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-8">
               {/* Biography */}

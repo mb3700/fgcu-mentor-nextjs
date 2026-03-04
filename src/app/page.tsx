@@ -50,7 +50,7 @@ export default function DashboardPage() {
                 />
                 <button
                   type="submit"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-fgcu-gold hover:bg-fgcu-gold-light text-fgcu-blue font-semibold px-6 py-2.5 rounded-xl transition-all text-sm cursor-pointer"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-fgcu-gold hover:bg-fgcu-gold-light text-fgcu-blue font-semibold px-3 sm:px-6 py-2.5 rounded-xl transition-all text-xs sm:text-sm cursor-pointer"
                 >
                   Search
                 </button>
@@ -68,7 +68,7 @@ export default function DashboardPage() {
                 { value: stats.judges, label: 'Judges', color: 'text-white' },
               ].map(({ value, label, color }) => (
                 <div key={label} className="stat-card rounded-2xl p-5 text-center">
-                  <div className={`text-3xl font-extrabold ${color}`}>{value}</div>
+                  <div className={`text-2xl sm:text-3xl font-extrabold ${color}`}>{value}</div>
                   <div className="text-xs text-white/60 font-medium mt-1 uppercase tracking-wider">
                     {label}
                   </div>
@@ -81,7 +81,7 @@ export default function DashboardPage() {
 
       {/* Charts Section */}
       {stats && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 sm:-mt-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="glass-card rounded-2xl p-6 shadow-lg fade-in">
               <h3 className="text-sm font-bold text-fgcu-blue uppercase tracking-wider mb-4">
@@ -119,7 +119,7 @@ export default function DashboardPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold">FGCU Alumni Mentors</p>
-                  <p className="text-3xl font-extrabold text-fgcu-blue mt-1">{stats.alumni}</p>
+                  <p className="text-2xl sm:text-3xl font-extrabold text-fgcu-blue mt-1">{stats.alumni}</p>
                 </div>
                 <div className="w-12 h-12 bg-fgcu-green/10 rounded-xl flex items-center justify-center">
                   <svg className="w-6 h-6 text-fgcu-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -133,7 +133,7 @@ export default function DashboardPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold">Veteran Mentors</p>
-                  <p className="text-3xl font-extrabold text-fgcu-blue mt-1">{stats.veterans}</p>
+                  <p className="text-2xl sm:text-3xl font-extrabold text-fgcu-blue mt-1">{stats.veterans}</p>
                 </div>
                 <div className="w-12 h-12 bg-fgcu-blue/10 rounded-xl flex items-center justify-center">
                   <svg className="w-6 h-6 text-fgcu-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">

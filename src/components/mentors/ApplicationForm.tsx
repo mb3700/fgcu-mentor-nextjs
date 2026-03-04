@@ -119,7 +119,7 @@ export function ApplicationForm() {
       </div>
 
       {/* Contact */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
         <div>
           <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Email *</label>
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
@@ -160,7 +160,7 @@ export function ApplicationForm() {
       <div>
         <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Which programs are you interested in mentoring?</label>
         <p className="text-xs text-gray-400 mb-2">Select all that apply</p>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
           {PROGRAMS.map((p) => (
             <label key={p} className="flex items-center space-x-2 p-2.5 rounded-lg border border-gray-200 hover:border-fgcu-blue/30 cursor-pointer transition-colors">
               <input type="checkbox" checked={programs.includes(p)} onChange={() => toggle(programs, setPrograms, p)}
@@ -175,7 +175,7 @@ export function ApplicationForm() {
       <div>
         <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Domain Expertise</label>
         <p className="text-xs text-gray-400 mb-2">Select your areas of expertise</p>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
           {DOMAIN_OPTIONS.map((d) => (
             <label key={d} className="flex items-center space-x-2 p-2.5 rounded-lg border border-gray-200 hover:border-fgcu-green/30 cursor-pointer transition-colors">
               <input type="checkbox" checked={domainExpertise.includes(d)} onChange={() => toggle(domainExpertise, setDomainExpertise, d)}
@@ -190,7 +190,7 @@ export function ApplicationForm() {
       <div>
         <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Sector Expertise</label>
         <p className="text-xs text-gray-400 mb-2">Select the sectors you have experience in</p>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
           {SECTOR_OPTIONS.map((s) => (
             <label key={s} className="flex items-center space-x-2 p-2.5 rounded-lg border border-gray-200 hover:border-fgcu-gold/30 cursor-pointer transition-colors">
               <input type="checkbox" checked={sectorExpertise.includes(s)} onChange={() => toggle(sectorExpertise, setSectorExpertise, s)}
@@ -204,7 +204,7 @@ export function ApplicationForm() {
       {/* Flags */}
       <div>
         <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 block">Additional Information</label>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
           {[
             { label: 'FGCU Alumni', checked: fgcuAlumni, onChange: setFgcuAlumni },
             { label: 'Veteran', checked: veteranStatus, onChange: setVeteranStatus },

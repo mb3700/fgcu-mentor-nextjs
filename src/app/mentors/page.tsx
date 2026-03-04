@@ -50,7 +50,7 @@ function DirectoryContent() {
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
         {/* Filters Sidebar */}
         <div className="lg:w-72 flex-shrink-0">
           <MentorFilters />

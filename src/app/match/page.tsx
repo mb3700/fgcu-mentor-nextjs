@@ -50,7 +50,7 @@ export default function MatchPage() {
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Selection Form */}
         <div className="lg:w-96 flex-shrink-0">
-          <div className="glass-card rounded-2xl p-6 shadow-lg sticky top-24 space-y-6">
+          <div className="glass-card rounded-2xl p-6 shadow-lg lg:sticky top-24 space-y-6">
             {/* Domain Expertise */}
             <div>
               <h3 className="text-xs font-bold text-fgcu-blue uppercase tracking-wider mb-3">
@@ -155,16 +155,16 @@ export default function MatchPage() {
                   href={`/mentors/${result.mentor.id}`}
                   className="glass-card rounded-2xl p-5 shadow-md block mentor-card"
                 >
-                  <div className="flex items-start gap-4">
+                  <div className="flex items-start gap-3 sm:gap-4">
                     {/* Match Score */}
-                    <div className={`flex-shrink-0 w-16 h-16 rounded-xl flex flex-col items-center justify-center ${
+                    <div className={`flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-xl flex flex-col items-center justify-center ${
                       result.matchPercentage >= 70
                         ? 'bg-fgcu-green/10 text-fgcu-green'
                         : result.matchPercentage >= 40
                         ? 'bg-fgcu-gold/15 text-fgcu-gold'
                         : 'bg-gray-100 text-gray-500'
                     }`}>
-                      <span className="text-xl font-extrabold">{result.matchPercentage}%</span>
+                      <span className="text-lg sm:text-xl font-extrabold">{result.matchPercentage}%</span>
                       <span className="text-[10px] font-medium uppercase">Match</span>
                     </div>
 
