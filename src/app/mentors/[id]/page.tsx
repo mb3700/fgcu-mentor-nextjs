@@ -24,11 +24,50 @@ export default async function MentorProfilePage({ params }: Props) {
   const { id } = await params;
   const mentor = await prisma.mentor.findUnique({
     where: { id: parseInt(id) },
-    include: { interactions: { orderBy: { date: 'desc' }, take: 20 } },
+    include: {
+      interactions: { orderBy: { date: 'desc' }, take: 20 },
+      sessionAttendances: {
+        include: {
+          session: {
+            include: {
+              circle: true,
+            },
+          },
+        },
+        orderBy: { session: { date: 'asc' } },
+      },
+    },
   });
 
   if (!mentor) notFound();
   if (mentor.status === 'Pending Approval') notFound();
+
+  // Group circle attendances by circle
+  const circleMap = new Map<number, {
+    circle: { id: number; name: string; coordinator: string; dayOfWeek: string; startTime: string; endTime: string; semester: string };
+    sessions: { id: number; date: Date; notes: string | null; cancelled: boolean; status: string }[];
+  }>();
+
+  for (const att of (mentor.sessionAttendances || [])) {
+    const circle = att.session.circle;
+    if (!circle) continue;
+    if (!circleMap.has(circle.id)) {
+      circleMap.set(circle.id, {
+        circle: { id: circle.id, name: circle.name, coordinator: circle.coordinator, dayOfWeek: circle.dayOfWeek, startTime: circle.startTime, endTime: circle.endTime, semester: circle.semester },
+        sessions: [],
+      });
+    }
+    circleMap.get(circle.id)!.sessions.push({
+      id: att.session.id,
+      date: att.session.date,
+      notes: att.session.notes,
+      cancelled: att.session.cancelled,
+      status: att.status,
+    });
+  }
+
+  const mentorCircles = Array.from(circleMap.values());
+  const now = new Date();
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -80,6 +119,11 @@ export default async function MentorProfilePage({ params }: Props) {
             {mentor.workStatus && (
               <span className="px-3 py-1 rounded-full bg-white/10 text-white/80 text-xs font-semibold border border-white/15">
                 {mentor.workStatus}
+              </span>
+            )}
+            {mentorCircles.length > 0 && (
+              <span className="px-3 py-1 rounded-full bg-fgcu-blue/20 text-white text-xs font-semibold border border-fgcu-blue/30">
+                Mentor Circle
               </span>
             )}
             {mentor.fgcuAlumni && (
@@ -138,6 +182,55 @@ export default async function MentorProfilePage({ params }: Props) {
                       >
                         {prog}
                       </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Mentor Circles */}
+              {mentorCircles.length > 0 && (
+                <div>
+                  <h2 className="text-sm font-bold text-fgcu-blue uppercase tracking-wider mb-3">
+                    Mentor Circles
+                  </h2>
+                  <div className="space-y-4">
+                    {mentorCircles.map(({ circle, sessions }) => (
+                      <Link
+                        key={circle.id}
+                        href={`/circles/${circle.id}`}
+                        className="block p-4 bg-gray-50 rounded-xl hover:bg-fgcu-blue/5 transition-colors"
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <h3 className="text-sm font-bold text-fgcu-blue">{circle.name}</h3>
+                          <span className="text-xs text-gray-400">{circle.semester}</span>
+                        </div>
+                        <p className="text-xs text-gray-500 mb-3">
+                          {circle.dayOfWeek}s {circle.startTime} – {circle.endTime} · Coordinator: {circle.coordinator}
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {sessions.map((session) => {
+                            const sessionDate = new Date(session.date);
+                            const isPast = sessionDate < now;
+                            const statusColor = session.status === 'attended'
+                              ? 'bg-fgcu-green/10 text-fgcu-green border-fgcu-green/20'
+                              : session.status === 'absent'
+                              ? 'bg-red-50 text-red-600 border-red-200'
+                              : session.status === 'excused'
+                              ? 'bg-fgcu-gold/10 text-fgcu-gold border-fgcu-gold/20'
+                              : isPast
+                              ? 'bg-gray-100 text-gray-400 border-gray-200'
+                              : 'bg-fgcu-blue/5 text-fgcu-blue border-fgcu-blue/10';
+                            return (
+                              <span
+                                key={session.id}
+                                className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium border ${statusColor}`}
+                              >
+                                {sessionDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                              </span>
+                            );
+                          })}
+                        </div>
+                      </Link>
                     ))}
                   </div>
                 </div>

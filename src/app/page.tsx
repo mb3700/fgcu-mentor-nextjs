@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import type { StatsData } from '@/types';
+import type { StatsData, CircleSession } from '@/types';
 
 const ProgramChart = dynamic(() => import('@/components/dashboard/ProgramChart'), { ssr: false });
 const DomainChart = dynamic(() => import('@/components/dashboard/DomainChart'), { ssr: false });
@@ -12,11 +12,30 @@ const SectorChart = dynamic(() => import('@/components/dashboard/SectorChart'), 
 export default function DashboardPage() {
   const [stats, setStats] = useState<StatsData | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [upcomingSessions, setUpcomingSessions] = useState<(CircleSession & { circle?: { name: string; startTime: string; endTime: string } })[]>([]);
 
   useEffect(() => {
     fetch('/api/stats')
       .then((r) => r.json())
       .then(setStats);
+
+    // Fetch upcoming circle sessions
+    fetch('/api/circles')
+      .then((r) => r.json())
+      .then((circles) => {
+        const now = new Date();
+        const allSessions: (CircleSession & { circle?: { name: string; startTime: string; endTime: string } })[] = [];
+        for (const circle of circles) {
+          for (const session of circle.sessions || []) {
+            if (new Date(session.date) >= now && !session.cancelled) {
+              allSessions.push({ ...session, circle: { name: circle.name, startTime: circle.startTime, endTime: circle.endTime } });
+            }
+          }
+        }
+        allSessions.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        setUpcomingSessions(allSessions.slice(0, 3));
+      })
+      .catch(() => {});
   }, []);
 
   return (
@@ -111,9 +130,43 @@ export default function DashboardPage() {
         </div>
       )}
 
+      {/* Upcoming Circles */}
+      {upcomingSessions.length > 0 && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+          <Link href="/circles" className="glass-card rounded-2xl p-6 shadow-lg border-l-4 border-fgcu-blue block hover:shadow-xl transition-all group">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-sm font-bold text-fgcu-blue uppercase tracking-wider">
+                Upcoming Mentor Circles
+              </h3>
+              <span className="text-xs text-fgcu-blue font-semibold group-hover:text-fgcu-gold transition-colors">
+                View All &rarr;
+              </span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {upcomingSessions.map((session) => (
+                <div key={session.id} className="flex items-center gap-3 p-3 bg-fgcu-blue/5 rounded-xl">
+                  <div className="w-10 h-10 bg-fgcu-blue/10 rounded-lg flex flex-col items-center justify-center flex-shrink-0">
+                    <span className="text-[10px] font-bold text-fgcu-blue uppercase leading-tight">
+                      {new Date(session.date).toLocaleDateString('en-US', { month: 'short' })}
+                    </span>
+                    <span className="text-sm font-extrabold text-fgcu-blue leading-tight">
+                      {new Date(session.date).getDate()}
+                    </span>
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-fgcu-blue truncate">{session.circle?.name}</p>
+                    <p className="text-xs text-gray-500">{session.circle?.startTime} – {session.circle?.endTime}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Link>
+        </div>
+      )}
+
       {/* Quick Access Cards */}
       {stats && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 mb-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="glass-card rounded-2xl p-6 shadow-lg border-l-4 border-fgcu-green">
               <div className="flex items-center justify-between">

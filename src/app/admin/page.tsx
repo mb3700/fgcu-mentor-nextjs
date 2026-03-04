@@ -50,10 +50,16 @@ export default function AdminOverview() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <Link href="/admin/mentors" className="glass-card rounded-xl p-5 shadow-sm hover:shadow-md transition-all group">
           <h3 className="font-bold text-fgcu-blue group-hover:text-fgcu-gold transition-colors">Manage Mentors</h3>
           <p className="text-sm text-gray-500 mt-1">View, edit, and delete mentors</p>
+        </Link>
+        <Link href="/admin/circles" className="glass-card rounded-xl p-5 shadow-sm hover:shadow-md transition-all group">
+          <div className="flex items-center gap-2">
+            <h3 className="font-bold text-fgcu-blue group-hover:text-fgcu-gold transition-colors">Mentor Circles</h3>
+          </div>
+          <p className="text-sm text-gray-500 mt-1">Manage circles, sessions, and schedules</p>
         </Link>
         <Link href="/admin/applications" className="glass-card rounded-xl p-5 shadow-sm hover:shadow-md transition-all group">
           <h3 className="font-bold text-fgcu-blue group-hover:text-fgcu-gold transition-colors">Applications</h3>

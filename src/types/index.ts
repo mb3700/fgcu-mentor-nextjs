@@ -21,6 +21,8 @@ export interface Mentor {
   createdAt: string;
   updatedAt: string;
   interactions?: Interaction[];
+  inCircle?: boolean;
+  sessionAttendances?: SessionAttendee[];
 }
 
 export interface Interaction {
@@ -77,6 +79,43 @@ export interface MatchResult {
   matchedSectors: string[];
   matchedPrograms: string[];
   matchPercentage: number;
+}
+
+export interface MentorCircle {
+  id: number;
+  name: string;
+  coordinator: string;
+  dayOfWeek: string;
+  startTime: string;
+  endTime: string;
+  semester: string;
+  location: string | null;
+  notes: string | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  sessions?: CircleSession[];
+}
+
+export interface CircleSession {
+  id: number;
+  circleId: number;
+  date: string;
+  notes: string | null;
+  cancelled: boolean;
+  createdAt: string;
+  attendees?: SessionAttendee[];
+  circle?: MentorCircle;
+}
+
+export interface SessionAttendee {
+  id: number;
+  sessionId: number;
+  mentorId: number;
+  status: string;
+  createdAt: string;
+  mentor?: Mentor;
+  session?: CircleSession;
 }
 
 export interface ImportedMentor {

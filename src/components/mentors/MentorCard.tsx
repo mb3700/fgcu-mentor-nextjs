@@ -29,6 +29,7 @@ export function MentorCard({ mentor }: { mentor: Mentor }) {
         {mentor.status === 'Available' && (
           <Badge variant="green">Available</Badge>
         )}
+        {mentor.inCircle && <Badge variant="blue">Mentor Circle</Badge>}
         {mentor.fgcuAlumni && <Badge variant="blue">Alumni</Badge>}
         {mentor.veteranStatus && <Badge variant="blue">Veteran</Badge>}
         {mentor.potentialSpeaker && <Badge variant="gold">Speaker</Badge>}

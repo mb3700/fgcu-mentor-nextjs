@@ -51,3 +51,9 @@ export const STATUS_OPTIONS = ['Available', 'Unavailable', 'On Hold', 'Pending A
 export const WORK_STATUS_OPTIONS = ['Working', 'Retired', 'Part Time'] as const;
 
 export const INTERACTION_TYPES = ['email', 'meeting', 'call', 'note'] as const;
+
+export const DAYS_OF_WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'] as const;
+
+export const ATTENDEE_STATUSES = ['scheduled', 'attended', 'absent', 'excused'] as const;
+
+export const SEMESTERS = ['Spring 2026', 'Summer 2026', 'Fall 2026', 'Spring 2027'] as const;

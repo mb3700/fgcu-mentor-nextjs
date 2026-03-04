@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 const navLinks = [
   { href: '/', label: 'Dashboard' },
   { href: '/mentors', label: 'Directory' },
+  { href: '/circles', label: 'Mentor Circles' },
   { href: '/match', label: 'Find a Mentor' },
   { href: '/admin', label: 'Admin' },
 ];

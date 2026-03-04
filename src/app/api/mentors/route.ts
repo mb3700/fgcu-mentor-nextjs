@@ -77,15 +77,26 @@ export async function GET(request: NextRequest) {
 
     const skip = (page - 1) * limit;
 
-    const [mentors, total] = await Promise.all([
+    const [mentorsRaw, total] = await Promise.all([
       prisma.mentor.findMany({
         where,
         orderBy,
         skip,
         take: limit,
+        include: {
+          _count: {
+            select: { sessionAttendances: true },
+          },
+        },
       }),
       prisma.mentor.count({ where }),
     ]);
+
+    // Enrich with inCircle flag
+    const mentors = mentorsRaw.map(({ _count, ...mentor }) => ({
+      ...mentor,
+      inCircle: _count.sessionAttendances > 0,
+    }));
 
     const totalPages = Math.ceil(total / limit);
 

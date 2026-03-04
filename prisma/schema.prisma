@@ -30,7 +30,8 @@ model Mentor {
   createdAt         DateTime  @default(now()) @map("created_at")
   updatedAt         DateTime  @updatedAt @map("updated_at")
 
-  interactions Interaction[]
+  interactions        Interaction[]
+  sessionAttendances  SessionAttendee[]
 
   @@map("mentors")
   @@index([name])
@@ -49,6 +50,58 @@ model Interaction {
   createdAt DateTime @default(now()) @map("created_at")
 
   @@map("interactions")
+  @@index([mentorId])
+}
+
+model MentorCircle {
+  id          Int       @id @default(autoincrement())
+  name        String
+  coordinator String
+  dayOfWeek   String    @map("day_of_week")
+  startTime   String    @map("start_time")
+  endTime     String    @map("end_time")
+  semester    String
+  location    String?
+  notes       String?   @db.Text
+  isActive    Boolean   @default(true) @map("is_active")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  sessions CircleSession[]
+
+  @@map("mentor_circles")
+  @@index([semester])
+  @@index([isActive])
+}
+
+model CircleSession {
+  id        Int          @id @default(autoincrement())
+  circleId  Int          @map("circle_id")
+  circle    MentorCircle @relation(fields: [circleId], references: [id], onDelete: Cascade)
+  date      DateTime
+  notes     String?      @db.Text
+  cancelled Boolean      @default(false)
+  createdAt DateTime     @default(now()) @map("created_at")
+
+  attendees SessionAttendee[]
+
+  @@map("circle_sessions")
+  @@index([circleId])
+  @@index([date])
+}
+
+model SessionAttendee {
+  id        Int           @id @default(autoincrement())
+  sessionId Int           @map("session_id")
+  session   CircleSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  mentorId  Int           @map("mentor_id")
+  mentor    Mentor        @relation(fields: [mentorId], references: [id], onDelete: Cascade)
+  status    String        @default("scheduled")
+  createdAt DateTime      @default(now()) @map("created_at")
+
+  @@unique([sessionId, mentorId])
+  @@map("session_attendees")
+  @@index([sessionId])
   @@index([mentorId])
 }
 
