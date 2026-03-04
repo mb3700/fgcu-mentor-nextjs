@@ -78,12 +78,12 @@ export default async function CirclesPage() {
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge variant="gold" size="md">
+                    <span className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-fgcu-gold/20 text-fgcu-gold border border-fgcu-gold/30">
                       {circle.dayOfWeek}s
-                    </Badge>
-                    <Badge variant="blue" size="md">
+                    </span>
+                    <span className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/15 text-white border border-white/20">
                       {circle.startTime} – {circle.endTime}
-                    </Badge>
+                    </span>
                   </div>
                 </div>
               </div>

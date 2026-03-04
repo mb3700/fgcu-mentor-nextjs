@@ -81,9 +81,9 @@ export default async function CircleDetailPage({ params }: Props) {
             )}
           </div>
           <div className="flex flex-wrap gap-2">
-            <Badge variant="gold" size="md">{circle.dayOfWeek}s</Badge>
-            <Badge variant="blue" size="md">{circle.startTime} – {circle.endTime}</Badge>
-            <Badge variant="green" size="md">{circle.semester}</Badge>
+            <span className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-fgcu-gold/20 text-fgcu-gold border border-fgcu-gold/30">{circle.dayOfWeek}s</span>
+            <span className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/15 text-white border border-white/20">{circle.startTime} – {circle.endTime}</span>
+            <span className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-fgcu-green/20 text-white border border-fgcu-green/30">{circle.semester}</span>
           </div>
         </div>
         <div className="flex gap-6 mt-6 text-white/90 text-sm">
