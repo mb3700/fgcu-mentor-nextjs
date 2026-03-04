@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Mentor {
+  id                Int       @id @default(autoincrement())
+  name              String
+  status            String    @default("Available")
+  businessName      String?   @map("business_name")
+  title             String?
+  location          String?
+  phone             String?
+  email             String?
+  biography         String?   @db.Text
+  fgcuAlumni        Boolean   @default(false) @map("fgcu_alumni")
+  domainExpertise   String[]  @map("domain_expertise")
+  sectorExpertise   String[]  @map("sector_expertise")
+  programs          String[]
+  workStatus        String?   @map("work_status")
+  potentialSpeaker  Boolean   @default(false) @map("potential_speaker")
+  potentialJudge    Boolean   @default(false) @map("potential_judge")
+  mentorCoordinator String?   @map("mentor_coordinator")
+  veteranStatus     Boolean   @default(false) @map("veteran_status")
+  photoUrl          String?   @map("photo_url")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  interactions Interaction[]
+
+  @@map("mentors")
+  @@index([name])
+  @@index([status])
+}
+
+model Interaction {
+  id        Int      @id @default(autoincrement())
+  mentorId  Int      @map("mentor_id")
+  mentor    Mentor   @relation(fields: [mentorId], references: [id], onDelete: Cascade)
+  type      String
+  subject   String?
+  notes     String?  @db.Text
+  date      DateTime @default(now())
+  createdBy String?  @map("created_by")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("interactions")
+  @@index([mentorId])
+}
+
+model AdminSession {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("admin_sessions")
+}
