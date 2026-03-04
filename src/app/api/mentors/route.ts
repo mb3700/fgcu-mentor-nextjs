@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     const judge = searchParams.get('judge');
     const sort = searchParams.get('sort') || 'name';
     const page = parseInt(searchParams.get('page') || '1', 10);
-    const limit = parseInt(searchParams.get('limit') || '20', 10);
+    const limit = parseInt(searchParams.get('limit') || '100', 10);
 
     const where: Prisma.MentorWhereInput = {};
 
