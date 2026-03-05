@@ -219,14 +219,12 @@ export default function DashboardPage() {
             <h3 className="text-sm font-bold text-fgcu-blue uppercase tracking-wider">
               Runway Program
             </h3>
-            <a
-              href="https://www.fgcu.edu/school-of-entrepreneurship/ife/runway-program"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/runway-program"
               className="text-xs text-fgcu-blue font-semibold hover:text-fgcu-gold transition-colors"
             >
-              Learn More &rarr;
-            </a>
+              View Program &rarr;
+            </Link>
           </div>
           <div className="flex items-center gap-3 p-3 bg-fgcu-gold/5 rounded-xl">
             <div className="w-10 h-10 bg-fgcu-gold/10 rounded-lg flex items-center justify-center flex-shrink-0">
