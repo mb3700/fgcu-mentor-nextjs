@@ -186,7 +186,7 @@ export default async function DashboardPage() {
                   </div>
                   <div className="min-w-0">
                     <p className="text-sm font-semibold text-fgcu-blue truncate">{session.circle?.name}</p>
-                    <p className="text-xs text-gray-500">{session.circle?.startTime} – {session.circle?.endTime}</p>
+                    <p className="text-xs text-gray-600">{session.circle?.startTime} – {session.circle?.endTime}</p>
                   </div>
                 </div>
               ))}
@@ -220,7 +220,7 @@ export default async function DashboardPage() {
                   </div>
                   <div className="min-w-0">
                     <p className="text-sm font-semibold text-fgcu-blue truncate">{workshop.topic}</p>
-                    <p className="text-xs text-gray-500">Monday 9:00 AM</p>
+                    <p className="text-xs text-gray-600">Monday 9:00 AM</p>
                   </div>
                 </div>
               ))}
@@ -249,7 +249,7 @@ export default async function DashboardPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
-            <p className="text-sm text-gray-500 italic">Mentoring events to be scheduled</p>
+            <p className="text-sm text-gray-600 italic">Mentoring events to be scheduled</p>
           </div>
         </div>
       </div>
