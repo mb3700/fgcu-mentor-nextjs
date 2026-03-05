@@ -9,7 +9,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const colorMap: Record<string, string> = {
   'Runway Program': '#002D72',   // FGCU Navy
   'Veterans Florida': '#007749', // FGCU Green
-  'DKSOE Students': '#B9975B',   // FGCU Gold
+  'Unassigned': '#B9975B',        // FGCU Gold
   'CEO Club': '#0E7490',         // Teal
   'ENT Classes': '#B45309',      // Amber
   'DMD Classes': '#7C3AED',      // Purple

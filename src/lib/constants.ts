@@ -3,7 +3,7 @@ export const PROGRAMS = [
   'Veterans Florida',
   'ENT Classes',
   'CEO Club',
-  'DKSOE Students',
+  'Unassigned',
   'DMD Classes',
 ] as const;
 

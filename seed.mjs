@@ -52,7 +52,7 @@ const mentors = [
       "Runway Program",
       "Veterans Florida",
       "ENT Classes",
-      "DKSOE Students",
+      "Unassigned",
       "DMD Classes"
     ],
     "workStatus": "Working",
@@ -142,7 +142,7 @@ const mentors = [
     "domainExpertise": [],
     "sectorExpertise": [],
     "programs": [
-      "DKSOE Students",
+      "Unassigned",
       "Runway Program",
       "Veterans Florida",
       "ENT Classes",
@@ -382,7 +382,7 @@ const mentors = [
     ],
     "programs": [
       "Runway Program",
-      "DKSOE Students",
+      "Unassigned",
       "Veterans Florida",
       "CEO Club"
     ],
@@ -1166,7 +1166,7 @@ const mentors = [
     ],
     "sectorExpertise": [],
     "programs": [
-      "DKSOE Students"
+      "Unassigned"
     ],
     "workStatus": "Retired",
     "potentialSpeaker": true,
@@ -1195,7 +1195,7 @@ const mentors = [
     ],
     "sectorExpertise": [],
     "programs": [
-      "DKSOE Students",
+      "Unassigned",
       "Runway Program",
       "Veterans Florida"
     ],
