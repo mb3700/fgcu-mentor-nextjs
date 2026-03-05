@@ -38,6 +38,17 @@ export default async function MentorProfilePage({ params }: Props) {
         },
         orderBy: { session: { date: 'asc' } },
       },
+      vepParticipations: {
+        where: { isActive: true },
+        include: {
+          workshopAssignments: {
+            include: {
+              workshop: true,
+            },
+            orderBy: { workshop: { date: 'asc' } },
+          },
+        },
+      },
     },
   });
 
@@ -138,6 +149,11 @@ export default async function MentorProfilePage({ params }: Props) {
                 Veteran
               </span>
             )}
+            {mentor.vepParticipations && mentor.vepParticipations.length > 0 && (
+              <span className="px-3 py-1 rounded-full bg-fgcu-green/20 text-white text-xs font-semibold border border-fgcu-green/30">
+                Veterans Program
+              </span>
+            )}
             {mentor.potentialSpeaker && (
               <span className="px-3 py-1 rounded-full bg-fgcu-gold/20 text-fgcu-gold text-xs font-semibold border border-fgcu-gold/30">
                 Potential Speaker
@@ -234,6 +250,74 @@ export default async function MentorProfilePage({ params }: Props) {
                         </div>
                       </Link>
                     ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Veterans Program */}
+              {mentor.vepParticipations && mentor.vepParticipations.length > 0 && (
+                <div>
+                  <h2 className="text-sm font-bold text-fgcu-blue uppercase tracking-wider mb-3">
+                    Veterans Entrepreneurship Program
+                  </h2>
+                  <div className="space-y-4">
+                    {mentor.vepParticipations.map((vp) => {
+                      const roleColors: Record<string, string> = {
+                        mentor: 'bg-fgcu-blue/10 text-fgcu-blue border-fgcu-blue/20',
+                        speaker: 'bg-fgcu-gold/10 text-fgcu-gold border-fgcu-gold/20',
+                        judge: 'bg-fgcu-green/10 text-fgcu-green border-fgcu-green/20',
+                      };
+                      const roleColor = roleColors[vp.role] || roleColors.mentor;
+                      return (
+                        <div key={vp.id} className="p-4 bg-gray-50 rounded-xl">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${roleColor}`}>
+                                {vp.role.charAt(0).toUpperCase() + vp.role.slice(1)}
+                              </span>
+                              {vp.roleDetail && (
+                                <span className="text-xs text-gray-500">{vp.roleDetail}</span>
+                              )}
+                            </div>
+                            <Link
+                              href="/veterans-program"
+                              className="text-xs text-fgcu-blue font-semibold hover:text-fgcu-gold transition-colors"
+                            >
+                              View Program &rarr;
+                            </Link>
+                          </div>
+                          {vp.workshopAssignments && vp.workshopAssignments.length > 0 && (
+                            <div className="flex flex-wrap gap-2 mt-3">
+                              {vp.workshopAssignments.map((wa) => {
+                                const workshopDate = new Date(wa.workshop.date);
+                                const isPast = workshopDate < now;
+                                const statusColor = wa.status === 'attended'
+                                  ? 'bg-fgcu-green/10 text-fgcu-green border-fgcu-green/20'
+                                  : wa.status === 'absent'
+                                  ? 'bg-red-50 text-red-600 border-red-200'
+                                  : wa.status === 'excused'
+                                  ? 'bg-fgcu-gold/10 text-fgcu-gold border-fgcu-gold/20'
+                                  : isPast
+                                  ? 'bg-gray-100 text-gray-400 border-gray-200'
+                                  : 'bg-fgcu-blue/5 text-fgcu-blue border-fgcu-blue/10';
+                                return (
+                                  <span
+                                    key={wa.id}
+                                    className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium border ${statusColor}`}
+                                    title={wa.workshop.topic}
+                                  >
+                                    {workshopDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                  </span>
+                                );
+                              })}
+                            </div>
+                          )}
+                          {(!vp.workshopAssignments || vp.workshopAssignments.length === 0) && (
+                            <p className="text-xs text-gray-400 italic mt-2">No workshop assignments yet</p>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               )}

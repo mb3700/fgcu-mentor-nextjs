@@ -57,3 +57,17 @@ export const DAYS_OF_WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Frid
 export const ATTENDEE_STATUSES = ['scheduled', 'attended', 'absent', 'excused'] as const;
 
 export const SEMESTERS = ['Spring 2026', 'Summer 2026', 'Fall 2026', 'Spring 2027'] as const;
+
+export const VEP_ROLES = ['mentor', 'speaker', 'judge'] as const;
+
+export const VEP_ROLE_LABELS: Record<string, string> = {
+  mentor: 'Mentor',
+  speaker: 'Speaker',
+  judge: 'Judge',
+};
+
+export const VEP_ROLE_COLORS: Record<string, string> = {
+  mentor: 'blue',
+  speaker: 'gold',
+  judge: 'green',
+};

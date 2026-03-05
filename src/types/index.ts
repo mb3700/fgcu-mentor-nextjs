@@ -22,6 +22,7 @@ export interface Mentor {
   updatedAt: string;
   interactions?: Interaction[];
   inCircle?: boolean;
+  inVep?: boolean;
   sessionAttendances?: SessionAttendee[];
 }
 
@@ -116,6 +117,43 @@ export interface SessionAttendee {
   createdAt: string;
   mentor?: Mentor;
   session?: CircleSession;
+}
+
+export interface VepParticipant {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string | null;
+  role: string;
+  roleDetail: string | null;
+  mentorId: number | null;
+  mentor?: Mentor;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  workshopAssignments?: VepWorkshopAssignment[];
+}
+
+export interface VepWorkshop {
+  id: number;
+  date: string;
+  topic: string;
+  notes: string | null;
+  cancelled: boolean;
+  semester: string;
+  createdAt: string;
+  updatedAt: string;
+  assignments?: VepWorkshopAssignment[];
+}
+
+export interface VepWorkshopAssignment {
+  id: number;
+  workshopId: number;
+  participantId: number;
+  status: string;
+  createdAt: string;
+  workshop?: VepWorkshop;
+  participant?: VepParticipant;
 }
 
 export interface ImportedMentor {

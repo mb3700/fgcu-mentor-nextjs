@@ -9,6 +9,7 @@ const navLinks = [
   { href: '/', label: 'Dashboard' },
   { href: '/mentors', label: 'Directory' },
   { href: '/circles', label: 'Mentor Circles' },
+  { href: '/veterans-program', label: 'Veterans Program' },
   { href: '/match', label: 'Find a Mentor' },
   { href: '/admin', label: 'Admin' },
 ];

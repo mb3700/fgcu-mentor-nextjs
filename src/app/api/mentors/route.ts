@@ -85,17 +85,18 @@ export async function GET(request: NextRequest) {
         take: limit,
         include: {
           _count: {
-            select: { sessionAttendances: true },
+            select: { sessionAttendances: true, vepParticipations: true },
           },
         },
       }),
       prisma.mentor.count({ where }),
     ]);
 
-    // Enrich with inCircle flag
+    // Enrich with inCircle and inVep flags
     const mentors = mentorsRaw.map(({ _count, ...mentor }) => ({
       ...mentor,
       inCircle: _count.sessionAttendances > 0,
+      inVep: _count.vepParticipations > 0,
     }));
 
     const totalPages = Math.ceil(total / limit);

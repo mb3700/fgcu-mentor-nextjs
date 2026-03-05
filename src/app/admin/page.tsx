@@ -61,6 +61,12 @@ export default function AdminOverview() {
           </div>
           <p className="text-sm text-gray-500 mt-1">Manage circles, sessions, and schedules</p>
         </Link>
+        <Link href="/admin/veterans-program" className="glass-card rounded-xl p-5 shadow-sm hover:shadow-md transition-all group">
+          <div className="flex items-center gap-2">
+            <h3 className="font-bold text-fgcu-blue group-hover:text-fgcu-gold transition-colors">Veterans Program</h3>
+          </div>
+          <p className="text-sm text-gray-500 mt-1">Manage VEP workshops, participants, and assignments</p>
+        </Link>
         <Link href="/admin/applications" className="glass-card rounded-xl p-5 shadow-sm hover:shadow-md transition-all group">
           <h3 className="font-bold text-fgcu-blue group-hover:text-fgcu-gold transition-colors">Applications</h3>
           <p className="text-sm text-gray-500 mt-1">Review pending mentor applications</p>

@@ -30,6 +30,7 @@ export function MentorCard({ mentor }: { mentor: Mentor }) {
           <Badge variant="green">Available</Badge>
         )}
         {mentor.inCircle && <Badge variant="blue">Mentor Circle</Badge>}
+        {mentor.inVep && <Badge variant="blue">Veterans Program</Badge>}
         {mentor.fgcuAlumni && <Badge variant="blue">Alumni</Badge>}
         {mentor.veteranStatus && <Badge variant="blue">Veteran</Badge>}
         {mentor.potentialSpeaker && <Badge variant="gold">Speaker</Badge>}
