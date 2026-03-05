@@ -239,56 +239,8 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Quick Access Cards */}
-      {stats && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="glass-card rounded-2xl p-6 shadow-lg border-l-4 border-fgcu-green">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold">FGCU Alumni Mentors</p>
-                  <p className="text-2xl sm:text-3xl font-extrabold text-fgcu-blue mt-1">{stats.alumni}</p>
-                </div>
-                <div className="w-12 h-12 bg-fgcu-green/10 rounded-xl flex items-center justify-center">
-                  <svg className="w-6 h-6 text-fgcu-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            <div className="glass-card rounded-2xl p-6 shadow-lg border-l-4 border-fgcu-blue">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold">Veteran Mentors</p>
-                  <p className="text-2xl sm:text-3xl font-extrabold text-fgcu-blue mt-1">{stats.veterans}</p>
-                </div>
-                <div className="w-12 h-12 bg-fgcu-blue/10 rounded-xl flex items-center justify-center">
-                  <svg className="w-6 h-6 text-fgcu-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            <Link href="/mentors" className="glass-card rounded-2xl p-6 shadow-lg border-l-4 border-fgcu-gold group hover:shadow-xl transition-all">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold">Browse All Mentors</p>
-                  <p className="text-lg font-bold text-fgcu-blue mt-1 group-hover:text-fgcu-gold transition-colors">
-                    View Directory &rarr;
-                  </p>
-                </div>
-                <div className="w-12 h-12 bg-fgcu-gold/10 rounded-xl flex items-center justify-center group-hover:bg-fgcu-gold/20 transition-colors">
-                  <svg className="w-6 h-6 text-fgcu-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                </div>
-              </div>
-            </Link>
-          </div>
-        </div>
-      )}
+      {/* Bottom spacer */}
+      <div className="mb-8" />
     </>
   );
 }
