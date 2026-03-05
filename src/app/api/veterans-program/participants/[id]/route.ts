@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { validateSession } from '@/lib/auth';
+import { revalidateAll } from '@/lib/revalidate';
 
 export async function GET(
   request: NextRequest,
@@ -71,6 +72,7 @@ export async function PUT(
       },
     });
 
+    revalidateAll();
     return NextResponse.json(participant);
   } catch (error) {
     console.error('Error updating VEP participant:', error);
@@ -100,6 +102,7 @@ export async function DELETE(
 
     await prisma.vepParticipant.delete({ where: { id: participantId } });
 
+    revalidateAll();
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error deleting VEP participant:', error);

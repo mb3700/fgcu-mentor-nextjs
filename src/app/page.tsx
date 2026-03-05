@@ -1,56 +1,106 @@
-'use client';
-
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
-import type { StatsData, CircleSession, VepWorkshop } from '@/types';
+import { prisma } from '@/lib/prisma';
+import DashboardCharts from '@/components/dashboard/DashboardCharts';
+import type { StatsData } from '@/types';
 
-const ProgramChart = dynamic(() => import('@/components/dashboard/ProgramChart'), { ssr: false });
-const DomainChart = dynamic(() => import('@/components/dashboard/DomainChart'), { ssr: false });
-const SectorChart = dynamic(() => import('@/components/dashboard/SectorChart'), { ssr: false });
+export const revalidate = 60;
 
-export default function DashboardPage() {
-  const [stats, setStats] = useState<StatsData | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [upcomingSessions, setUpcomingSessions] = useState<(CircleSession & { circle?: { name: string; startTime: string; endTime: string } })[]>([]);
-  const [upcomingWorkshops, setUpcomingWorkshops] = useState<VepWorkshop[]>([]);
+export default async function DashboardPage() {
+  const activeFilter = { status: { not: 'Pending Approval' } };
+  const now = new Date();
 
-  useEffect(() => {
-    fetch('/api/stats')
-      .then((r) => r.json())
-      .then(setStats);
+  // Run all queries in parallel — replaces 3 sequential client-side API calls
+  const [
+    total, available, pending, speakers, judges, alumni, veterans,
+    programRows, domainRows, sectorRows, workStatusRows,
+    upcomingSessions, upcomingWorkshops,
+  ] = await Promise.all([
+    // Stats counts
+    prisma.mentor.count({ where: activeFilter }),
+    prisma.mentor.count({ where: { status: 'Available' } }),
+    prisma.mentor.count({ where: { status: 'Pending Approval' } }),
+    prisma.mentor.count({ where: { ...activeFilter, potentialSpeaker: true } }),
+    prisma.mentor.count({ where: { ...activeFilter, potentialJudge: true } }),
+    prisma.mentor.count({ where: { ...activeFilter, fgcuAlumni: true } }),
+    prisma.mentor.count({ where: { ...activeFilter, veteranStatus: true } }),
+    // Array field breakdowns (raw SQL with unnest for PostgreSQL)
+    prisma.$queryRaw<{ value: string; count: bigint }[]>`
+      SELECT unnest(programs) as value, COUNT(*) as count
+      FROM mentors
+      WHERE status != 'Pending Approval'
+      GROUP BY value
+      ORDER BY count DESC
+    `,
+    prisma.$queryRaw<{ value: string; count: bigint }[]>`
+      SELECT unnest(domain_expertise) as value, COUNT(*) as count
+      FROM mentors
+      WHERE status != 'Pending Approval'
+      GROUP BY value
+      ORDER BY count DESC
+    `,
+    prisma.$queryRaw<{ value: string; count: bigint }[]>`
+      SELECT unnest(sector_expertise) as value, COUNT(*) as count
+      FROM mentors
+      WHERE status != 'Pending Approval'
+      GROUP BY value
+      ORDER BY count DESC
+    `,
+    prisma.mentor.groupBy({
+      by: ['workStatus'],
+      where: activeFilter,
+      _count: { _all: true },
+      orderBy: { _count: { workStatus: 'desc' } },
+    }),
+    // Upcoming circle sessions — only future non-cancelled, limit 3
+    prisma.circleSession.findMany({
+      where: { date: { gte: now }, cancelled: false },
+      include: { circle: { select: { name: true, startTime: true, endTime: true } } },
+      orderBy: { date: 'asc' },
+      take: 3,
+    }),
+    // Upcoming VEP workshops — only future non-cancelled, limit 3
+    prisma.vepWorkshop.findMany({
+      where: { date: { gte: now }, cancelled: false },
+      orderBy: { date: 'asc' },
+      take: 3,
+    }),
+  ]);
 
-    // Fetch upcoming circle sessions
-    fetch('/api/circles')
-      .then((r) => r.json())
-      .then((circles) => {
-        const now = new Date();
-        const allSessions: (CircleSession & { circle?: { name: string; startTime: string; endTime: string } })[] = [];
-        for (const circle of circles) {
-          for (const session of circle.sessions || []) {
-            if (new Date(session.date) >= now && !session.cancelled) {
-              allSessions.push({ ...session, circle: { name: circle.name, startTime: circle.startTime, endTime: circle.endTime } });
-            }
-          }
-        }
-        allSessions.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-        setUpcomingSessions(allSessions.slice(0, 3));
-      })
-      .catch(() => {});
+  // Convert raw rows to Record<string, number>
+  const programs: Record<string, number> = {};
+  for (const row of programRows) {
+    programs[row.value] = Number(row.count);
+  }
 
-    // Fetch upcoming VEP workshops
-    fetch('/api/veterans-program')
-      .then((r) => r.json())
-      .then((workshops: VepWorkshop[]) => {
-        const now = new Date();
-        const upcoming = workshops
-          .filter((w) => new Date(w.date) >= now && !w.cancelled)
-          .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-          .slice(0, 3);
-        setUpcomingWorkshops(upcoming);
-      })
-      .catch(() => {});
-  }, []);
+  const domains: Record<string, number> = {};
+  for (const row of domainRows) {
+    domains[row.value] = Number(row.count);
+  }
+
+  const sectors: Record<string, number> = {};
+  for (const row of sectorRows) {
+    sectors[row.value] = Number(row.count);
+  }
+
+  const workStatuses: Record<string, number> = {};
+  for (const row of workStatusRows) {
+    const key = row.workStatus || 'Unknown';
+    workStatuses[key] = row._count._all;
+  }
+
+  const stats: StatsData = {
+    total,
+    available,
+    pending,
+    speakers,
+    judges,
+    alumni,
+    veterans,
+    programs,
+    domains,
+    sectors,
+    workStatuses,
+  };
 
   return (
     <>
@@ -70,14 +120,12 @@ export default function DashboardPage() {
               with industry leaders who fuel innovation.
             </p>
 
-            {/* Quick Search */}
+            {/* Quick Search — uncontrolled input (no client state needed) */}
             <form action="/mentors" method="GET" className="max-w-xl mx-auto">
               <div className="relative">
                 <input
                   type="text"
                   name="search"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search mentors by name, company, or expertise..."
                   className="w-full px-6 py-4 rounded-2xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-fgcu-gold focus:bg-white/15 text-sm backdrop-blur-sm"
                 />
@@ -92,57 +140,26 @@ export default function DashboardPage() {
           </div>
 
           {/* Stats Cards */}
-          {stats && (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 max-w-4xl mx-auto stagger-in">
-              {[
-                { value: stats.total, label: 'Total Mentors', color: 'text-white' },
-                { value: stats.available, label: 'Available', color: 'text-fgcu-green-light' },
-                { value: stats.speakers, label: 'Speakers', color: 'text-fgcu-gold' },
-                { value: stats.judges, label: 'Judges', color: 'text-white' },
-              ].map(({ value, label, color }) => (
-                <div key={label} className="stat-card rounded-2xl p-5 text-center">
-                  <div className={`text-2xl sm:text-3xl font-extrabold ${color}`}>{value}</div>
-                  <div className="text-xs text-white/60 font-medium mt-1 uppercase tracking-wider">
-                    {label}
-                  </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 max-w-4xl mx-auto stagger-in">
+            {[
+              { value: stats.total, label: 'Total Mentors', color: 'text-white' },
+              { value: stats.available, label: 'Available', color: 'text-fgcu-green-light' },
+              { value: stats.speakers, label: 'Speakers', color: 'text-fgcu-gold' },
+              { value: stats.judges, label: 'Judges', color: 'text-white' },
+            ].map(({ value, label, color }) => (
+              <div key={label} className="stat-card rounded-2xl p-5 text-center">
+                <div className={`text-2xl sm:text-3xl font-extrabold ${color}`}>{value}</div>
+                <div className="text-xs text-white/60 font-medium mt-1 uppercase tracking-wider">
+                  {label}
                 </div>
-              ))}
-            </div>
-          )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Charts Section */}
-      {stats && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 sm:-mt-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="glass-card rounded-2xl p-6 shadow-lg fade-in">
-              <h3 className="text-sm font-bold text-fgcu-blue uppercase tracking-wider mb-4">
-                Mentors by Program
-              </h3>
-              <div className="relative" style={{ height: 260 }}>
-                <ProgramChart data={stats.programs} />
-              </div>
-            </div>
-            <div className="glass-card rounded-2xl p-6 shadow-lg fade-in">
-              <h3 className="text-sm font-bold text-fgcu-blue uppercase tracking-wider mb-4">
-                Domain Expertise
-              </h3>
-              <div className="relative" style={{ height: 260 }}>
-                <DomainChart data={stats.domains} />
-              </div>
-            </div>
-            <div className="glass-card rounded-2xl p-6 shadow-lg fade-in">
-              <h3 className="text-sm font-bold text-fgcu-blue uppercase tracking-wider mb-4">
-                Sector Coverage
-              </h3>
-              <div className="relative" style={{ height: 260 }}>
-                <SectorChart data={stats.sectors} />
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <DashboardCharts programs={stats.programs} domains={stats.domains} sectors={stats.sectors} />
 
       {/* Upcoming Circles */}
       {upcomingSessions.length > 0 && (

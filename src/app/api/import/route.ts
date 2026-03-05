@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { validateSession } from '@/lib/auth';
+import { revalidateAll } from '@/lib/revalidate';
 import { parseExcelFile } from '@/lib/excel';
 
 export async function POST(request: NextRequest) {
@@ -67,6 +68,7 @@ export async function POST(request: NextRequest) {
       })),
     });
 
+    revalidateAll();
     return NextResponse.json({
       success: true,
       imported: created.count,

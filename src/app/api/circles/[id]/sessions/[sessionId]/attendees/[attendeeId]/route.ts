@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { validateSession } from '@/lib/auth';
+import { revalidateAll } from '@/lib/revalidate';
 
 export async function PUT(
   request: NextRequest,
@@ -27,6 +28,7 @@ export async function PUT(
       include: { mentor: true },
     });
 
+    revalidateAll();
     return NextResponse.json(attendee);
   } catch (error) {
     console.error('Error updating attendee:', error);

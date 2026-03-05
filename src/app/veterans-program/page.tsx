@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/Badge';
 import { VepRoleBadge } from '@/components/veterans/VepRoleBadge';
 import type { Metadata } from 'next';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: 'Veterans Entrepreneurship Program | FGCU Mentor Directory',

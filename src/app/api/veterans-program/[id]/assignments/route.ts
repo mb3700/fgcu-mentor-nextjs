@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { validateSession } from '@/lib/auth';
+import { revalidateAll } from '@/lib/revalidate';
 
 export async function POST(
   request: NextRequest,
@@ -61,6 +62,7 @@ export async function POST(
       },
     });
 
+    revalidateAll();
     return NextResponse.json(assignments, { status: 201 });
   } catch (error) {
     console.error('Error assigning participants to VEP workshop:', error);
@@ -107,6 +109,7 @@ export async function DELETE(
       },
     });
 
+    revalidateAll();
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error removing participant from VEP workshop:', error);

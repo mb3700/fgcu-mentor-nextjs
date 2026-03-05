@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { validateSession } from '@/lib/auth';
+import { revalidateAll } from '@/lib/revalidate';
 
 export async function GET(request: NextRequest) {
   try {
@@ -52,6 +53,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    revalidateAll();
     return NextResponse.json(workshop, { status: 201 });
   } catch (error) {
     console.error('Error creating VEP workshop:', error);

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { validateSession } from '@/lib/auth';
+import { revalidateAll } from '@/lib/revalidate';
 
 export async function GET(
   request: NextRequest,
@@ -71,6 +72,7 @@ export async function POST(
       orderBy: { mentor: { name: 'asc' } },
     });
 
+    revalidateAll();
     return NextResponse.json(attendees, { status: 201 });
   } catch (error) {
     console.error('Error assigning mentors:', error);
@@ -104,6 +106,7 @@ export async function DELETE(
       where: { sessionId: sid, mentorId },
     });
 
+    revalidateAll();
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error removing attendee:', error);

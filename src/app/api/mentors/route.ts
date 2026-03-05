@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { validateSession } from '@/lib/auth';
+import { revalidateAll } from '@/lib/revalidate';
 import type { Prisma } from '@prisma/client';
 
 export async function GET(request: NextRequest) {
@@ -143,6 +144,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    revalidateAll();
     return NextResponse.json(mentor, { status: 201 });
   } catch (error) {
     console.error('Error creating mentor:', error);

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { validateSession } from '@/lib/auth';
+import { revalidateAll } from '@/lib/revalidate';
 
 export async function PUT(
   request: NextRequest,
@@ -30,6 +31,7 @@ export async function PUT(
       },
     });
 
+    revalidateAll();
     return NextResponse.json(session);
   } catch (error) {
     console.error('Error updating session:', error);
@@ -59,6 +61,7 @@ export async function DELETE(
 
     await prisma.circleSession.delete({ where: { id: sid } });
 
+    revalidateAll();
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error deleting session:', error);
