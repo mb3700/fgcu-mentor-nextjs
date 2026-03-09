@@ -12,6 +12,7 @@ const navLinks = [
   { href: '/veterans-program', label: 'Veterans Program' },
   { href: '/runway-program', label: 'Runway Program' },
   { href: '/match', label: 'Find a Mentor' },
+  { href: '/apply', label: 'Become a Mentor' },
   { href: '/admin', label: 'Admin' },
 ];
 

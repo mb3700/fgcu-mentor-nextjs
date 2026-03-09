@@ -137,6 +137,12 @@ export default async function DashboardPage() {
                 </button>
               </div>
             </form>
+            <p className="mt-4 text-sm text-white/60">
+              Are you a mentor?{' '}
+              <Link href="/apply" className="text-fgcu-gold hover:text-fgcu-gold-light font-semibold underline underline-offset-2 transition-colors">
+                Apply to join our network &rarr;
+              </Link>
+            </p>
           </div>
 
           {/* Stats Cards */}
