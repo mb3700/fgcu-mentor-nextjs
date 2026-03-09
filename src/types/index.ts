@@ -156,6 +156,29 @@ export interface VepWorkshopAssignment {
   participant?: VepParticipant;
 }
 
+export interface RunwayEvent {
+  id: number;
+  date: string;
+  title: string;
+  description: string | null;
+  location: string | null;
+  semester: string;
+  cancelled: boolean;
+  createdAt: string;
+  updatedAt: string;
+  assignments?: RunwayEventAssignment[];
+}
+
+export interface RunwayEventAssignment {
+  id: number;
+  eventId: number;
+  mentorId: number;
+  status: string;
+  createdAt: string;
+  event?: RunwayEvent;
+  mentor?: Mentor;
+}
+
 export interface ImportedMentor {
   name: string;
   status: string;

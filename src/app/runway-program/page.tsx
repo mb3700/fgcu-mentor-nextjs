@@ -20,6 +20,15 @@ export default async function RunwayProgramPage() {
     orderBy: { name: 'asc' },
   });
 
+  const events = await prisma.runwayEvent.findMany({
+    where: {
+      cancelled: false,
+      date: { gte: new Date() },
+    },
+    orderBy: { date: 'asc' },
+    take: 10,
+  });
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       {/* Hero Header */}
@@ -42,31 +51,79 @@ export default async function RunwayProgramPage() {
       {/* Mentoring Events */}
       <section className="mb-12">
         <h2 className="text-2xl font-bold text-fgcu-blue mb-6">
-          Mentoring Events
+          Upcoming Events
         </h2>
 
-        <div className="glass-card rounded-2xl p-12 text-center">
-          <div className="flex flex-col items-center gap-3">
-            <div className="w-12 h-12 bg-fgcu-gold/10 rounded-xl flex items-center justify-center">
-              <svg
-                className="w-6 h-6 text-fgcu-gold"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
+        {events.length === 0 ? (
+          <div className="glass-card rounded-2xl p-12 text-center">
+            <div className="flex flex-col items-center gap-3">
+              <div className="w-12 h-12 bg-fgcu-gold/10 rounded-xl flex items-center justify-center">
+                <svg
+                  className="w-6 h-6 text-fgcu-gold"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+              </div>
+              <p className="text-gray-500 italic">
+                No upcoming events scheduled
+              </p>
             </div>
-            <p className="text-gray-500 italic">
-              Mentoring events to be scheduled
-            </p>
           </div>
-        </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {events.map((event) => {
+              const eventDate = new Date(event.date);
+              return (
+                <div
+                  key={event.id}
+                  className="glass-card rounded-2xl p-5 hover:shadow-lg transition-all"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0 w-14 h-14 bg-fgcu-blue/10 rounded-xl flex flex-col items-center justify-center">
+                      <span className="text-xs font-bold text-fgcu-blue uppercase">
+                        {eventDate.toLocaleDateString('en-US', { month: 'short' })}
+                      </span>
+                      <span className="text-lg font-extrabold text-fgcu-blue leading-none">
+                        {eventDate.getDate()}
+                      </span>
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="text-sm font-bold text-gray-900">
+                        {event.title}
+                      </h3>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {eventDate.toLocaleDateString('en-US', {
+                          weekday: 'long',
+                          month: 'long',
+                          day: 'numeric',
+                          year: 'numeric',
+                        })}
+                      </p>
+                      {event.location && (
+                        <p className="text-xs text-gray-400 mt-0.5">
+                          {event.location}
+                        </p>
+                      )}
+                      {event.description && (
+                        <p className="text-xs text-gray-500 mt-2">
+                          {event.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </section>
 
       {/* Program Mentors */}

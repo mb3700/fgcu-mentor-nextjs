@@ -30,9 +30,10 @@ model Mentor {
   createdAt         DateTime  @default(now()) @map("created_at")
   updatedAt         DateTime  @updatedAt @map("updated_at")
 
-  interactions        Interaction[]
-  sessionAttendances  SessionAttendee[]
-  vepParticipations   VepParticipant[]
+  interactions             Interaction[]
+  sessionAttendances       SessionAttendee[]
+  vepParticipations        VepParticipant[]
+  runwayEventAssignments   RunwayEventAssignment[]
 
   @@map("mentors")
   @@index([name])
@@ -165,4 +166,37 @@ model VepWorkshopAssignment {
   @@map("vep_workshop_assignments")
   @@index([workshopId])
   @@index([participantId])
+}
+
+model RunwayEvent {
+  id          Int       @id @default(autoincrement())
+  date        DateTime
+  title       String
+  description String?   @db.Text
+  location    String?
+  semester    String    @default("Spring 2026")
+  cancelled   Boolean   @default(false)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  assignments RunwayEventAssignment[]
+
+  @@map("runway_events")
+  @@index([date])
+  @@index([semester])
+}
+
+model RunwayEventAssignment {
+  id        Int          @id @default(autoincrement())
+  eventId   Int          @map("event_id")
+  event     RunwayEvent  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  mentorId  Int          @map("mentor_id")
+  mentor    Mentor       @relation(fields: [mentorId], references: [id], onDelete: Cascade)
+  status    String       @default("scheduled")
+  createdAt DateTime     @default(now()) @map("created_at")
+
+  @@unique([eventId, mentorId])
+  @@map("runway_event_assignments")
+  @@index([eventId])
+  @@index([mentorId])
 }
